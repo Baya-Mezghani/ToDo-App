@@ -19,10 +19,16 @@ function TodoTable()  {
     const [deleteConfirmationIsShown, setDeleteConfirmationIsShown] = useState(false);
     const [todoToBeDeleted, setTodoToBeDeleted] = useState(null);
 
+    const handleCreateTodo = (event) => {
+        event.preventDefault();
+        context.createTodo({ task: addTodo },event);
+        setAddTodo(''); // Clear the text field
+      };
+
     return (
         <Fragment>
 
-        <form onSubmit={(event) => {context.createTodo( {task:addTodo},  event)}}>
+        <form onSubmit={handleCreateTodo}>
         <Table>
             <TableHead>
                 <TableRow>

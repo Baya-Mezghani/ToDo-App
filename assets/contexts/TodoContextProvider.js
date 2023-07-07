@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { createContext }  from 'react';
+import { toast } from 'react-toastify';
 
 export const TodoContext= createContext();
 
@@ -12,18 +13,44 @@ class TodoContextProvider extends React.Component {
 
         this.readTodo();
     }
+
 // create 
 createTodo(todo, event)
 { event.preventDefault(); 
   axios.post('/api/todo/create',todo) 
     .then(response=>{ 
-      console.log(response.data);
-      let data = [...this.state.todos]; 
-      data.push(todo);
-      this.setState( {todos: data});
+      if (response.data.type === 'success') 
+      {toast.success( response.data.text, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+        let data = [...this.state.todos]; 
+        data.push(todo);
+        this.setState( {todos: data,
+        });
+      } else {
+        toast.error( response.data.text, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+      }
     }) 
     .catch(error=>{ 
-      console.error(error); }) }
+      console.error(error); }) 
+}
+
 // read 
 readTodo(){
     axios.get('/api/todo/read')
@@ -35,10 +62,22 @@ readTodo(){
       console.error(error);
     })
 }
+
 //update 
 updateTodo(data){
   axios.put('/api/todo/update/' +data.id, data)
   .then( response =>{
+    if (response.data.type === 'success') {
+      toast.success( response.data.text, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
     let todos= [...this.state.todos];
     let todo= todos.find(todo=> {
       return todo.id === data.id  ; 
@@ -47,18 +86,44 @@ updateTodo(data){
     this.setState({
       todos: todos,
     })
-  })
+  } else {
+    toast.error( response.data.text, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
+
+  }
+})
+
    .catch(error=>{
       console.error(error);
     })
   
 
 }
+
 //delete 
 deleteTodo(data){
 
   axios.delete('/api/todo/delete/'+ data.id)
   .then(response => { 
+    if (response.data.type === 'success') {
+      toast.success( response.data.text, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
     let todos=[...this.state.todos];
     let todo=todos.find(todo=>{
         return todo.id === data.id;
@@ -69,8 +134,20 @@ deleteTodo(data){
     this.setState({
       todos:todos,
     });
+  } else {
+    toast.error( response.data.text, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
 
-    })
+  }
+    }) 
     .catch(error => {
       console.log(error);
     });
@@ -83,7 +160,7 @@ deleteTodo(data){
         ...this.state,
         createTodo: this.createTodo.bind(this),
         updateTodo: this.updateTodo.bind(this),
-        deleteTodo: this.deleteTodo.bind(this)
+        deleteTodo: this.deleteTodo.bind(this),
       }
       }>
          {this.props.children}

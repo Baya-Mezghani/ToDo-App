@@ -23,6 +23,7 @@ class TodoController extends AbstractController
         $this->todoRepository = $todoRepository;
     }
 
+//read 
     #[Route('/read', name: '_read',methods:['GET'])]
     public function index()
     {
@@ -36,7 +37,7 @@ class TodoController extends AbstractController
     }
 
 
-
+// create 
     #[Route('/create', name: '_create', methods:['POST'])]
     public function create(Request $request)
     {
@@ -53,15 +54,19 @@ class TodoController extends AbstractController
 
         return $this->json([
             'todo'=>$todo->toArray(),
+            'text' => 'Your task has been created',
+            'type' => 'success',
         ]);
+
        }
        catch (Exception $exception) {
-        return $this->json(['error' => 'An error occurred while creating the todo.']);
-        }
+        return $this->json([
+        'text' => 'An error occurred while creating the task.',
+    ]);
+        }        
+}
 
-
-        }
-
+//update 
     #[Route('/update/{id}', name: '_update', methods:['PUT'])]
     public function update(Request $request, Todo $todo)
     {
@@ -71,29 +76,33 @@ class TodoController extends AbstractController
 
         try{
             $this->entityManager->flush();
+            return $this->json([
+                'text'=>'Task has been updated',
+                'type' => 'success',
+
+            ]);
 
         }catch (Exception $exception) {
 
-            return $this->json(['error' => 'An error occurred while creating the todo.']);
-            }
-            return $this->json([
-                'message'=>'Todo has been updated',
-            ]);
-    }
+            return $this->json(['text' => 'An error occurred while updating the task.']);
+            }            
+}
 
+//delete 
     #[Route('/delete/{id}', name: '_delete')]
     public function delete (Todo $todo)
     {
         try {
             $this->entityManager->remove($todo); 
             $this->entityManager->flush();
-        } catch (Exception $exception) {
-            
-        }
-        return $this->json([
-            'message'=>'Todo has been deleted',
-        ]);
-    }
+            return $this->json([
+                'text'=>'Task has been deleted',
+                'type' => 'success',
+            ]);
 
+        } catch (Exception $exception) {
+            return $this->json(['text' => 'An error occurred while deleting the task.']);
+        }
+    }
 }
 
