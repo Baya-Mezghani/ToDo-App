@@ -81,5 +81,19 @@ class TodoController extends AbstractController
             ]);
     }
 
+    #[Route('/delete/{id}', name: '_delete')]
+    public function delete (Todo $todo)
+    {
+        try {
+            $this->entityManager->remove($todo); 
+            $this->entityManager->flush();
+        } catch (Exception $exception) {
+            
+        }
+        return $this->json([
+            'message'=>'Todo has been deleted',
+        ]);
+    }
+
 }
 
