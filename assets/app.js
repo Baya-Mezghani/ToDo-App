@@ -1,5 +1,5 @@
 import React , { Component } from 'react';
-import ReactDOM  from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import TodoContextProvider from './contexts/TodoContextProvider';
 import TodoTable from './components/TodoTable.js';
 import { CssBaseline } from '@mui/material';
@@ -20,5 +20,6 @@ class App extends Component {
     );
   }
 }
-
-ReactDOM.render (<App/>, document.getElementById('root'));
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(<App/>);

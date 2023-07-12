@@ -82,11 +82,13 @@ updateTodo(data){
     let todo= todos.find(todo=> {
       return todo.id === data.id  ; 
     });
-    todo.task=data.task;
+    todo.task=response.data.todo.task;
+    todo.description=response.data.todo.description;
     this.setState({
       todos: todos,
     })
   } else {
+    
     toast.error( response.data.text, {
       position: "top-center",
       autoClose: 5000,
